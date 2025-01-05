@@ -56,64 +56,73 @@ document.addEventListener('DOMContentLoaded', () => {
 // Event listener for the "Add Participant" button
 document.getElementById('addParticipantButton').addEventListener('click', addParticipantField);
 
-// Submission
-document.getElementById('participantForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+    // Submission
+    document.getElementById('participantForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    const participants = [];
-    const container = document.getElementById('participantsFieldsContainer');
-    const packageId = document.querySelector('[name="packageId"]').value;
+        const participants = [];
+        const container = document.getElementById('participantsFieldsContainer');
+        const packageId = document.querySelector('[name="packageId"]').value;
 
-    for (let i = 0; i < container.childElementCount; i++) {
-        const name = document.getElementById(`name${i + 1}`).value.trim();
-        const surname = document.getElementById(`surname${i + 1}`).value.trim();
-        const dateOfBirth = document.getElementById(`dateOfBirth${i + 1}`).value;
-        const address = document.getElementById(`address${i + 1}`).value.trim();
-        const email = document.getElementById(`email${i + 1}`).value.trim();
-        const phone = document.getElementById(`phone${i + 1}`).value.trim();
+        for (let i = 0; i < container.childElementCount; i++) {
+            const name = document.getElementById(`name${i + 1}`).value.trim();
+            const surname = document.getElementById(`surname${i + 1}`).value.trim();
+            const dateOfBirth = document.getElementById(`dateOfBirth${i + 1}`).value;
+            const address = document.getElementById(`address${i + 1}`).value.trim();
+            const email = document.getElementById(`email${i + 1}`).value.trim();
+            const phone = document.getElementById(`phone${i + 1}`).value.trim();
 
-        participants.push({ name, surname, dateOfBirth, address, email, phone });
-    }
-
-    const customerIds = participants.map(participant => participant.id);
-    const employeeId = 1; // NOT THERE - employee ID
-
-    /// CURRENTLY DELETED (Booking Controller) - so will not work:
-    // try {
-    //     const response = await fetch('/api/bookings', {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify({
-    //             customerIds: customerIds,
-    //             packageId: packageId,
-    //             employeeId: employeeId,
-    //             travelers: participants.length
-    //         }),
-    //     });
-    //     if (response.ok) {
-    //         alert('Booking created successfully!');
-    //     } else {
-    //         const errors = await response.json();
-    //         alert('Error: ' + errors);
-    //     }
-    // } catch (error) {
-    //     alert('An error occurred: ' + error.message);
-    // }
-
-    try {
-        const response = await fetch('/api/participants', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(participants),
-        });
-
-        if (response.ok) {
-            //
-        } else {
-            const errors = await response.json();
-            alert('Validation errors:\n' + errors.join('\n'));
+            participants.push({ name, surname, dateOfBirth, address, email, phone });
         }
-    } catch (error) {
-        alert('An error occurred: ' + error.message);
-    }
-});
+
+        const employeeId = 1; // NOT THERE - employee ID
+
+        try {
+            const response = await fetch('/api/participants', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(participants),
+            });
+
+            if (response.ok) {
+                const savedParticipants = await response.json();
+
+                if (!Array.isArray(savedParticipants)) {
+                    throw new Error('Expected participants to be an array.');
+                }
+
+                const bookings = [];
+                savedParticipants.forEach((participant_, index) => {
+                    const booking = {
+                        customerId: participant_.id,
+                        packageId: packageId,
+                        employeeId: 1,
+                        travelers: participants.length,
+                    };
+                    bookings.push(booking);
+                });
+
+                try {
+                    const bookingResponse = await fetch('/api/bookings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(bookings),
+                    });
+                    if (bookingResponse.ok) {
+                        alert('Booking created successfully!');
+                    } else {
+                        const errors = await bookingResponse.text();
+                        alert('Errors:\n' + errors);
+                    }
+                } catch (error) {
+                    alert('An error occurred: ' + error.message);
+                }
+            } else {
+                const errors = await response.json();
+                alert('Errors:\n' + errors.join('\n'));
+            }
+        } catch (error) {
+            alert('An error occurred: ' + error.message);
+        }
+
+    });

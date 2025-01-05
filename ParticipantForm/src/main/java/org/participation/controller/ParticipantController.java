@@ -44,9 +44,9 @@ public class ParticipantController {
             return participant;
         }).toList();
 
-        participantRepository.saveAll(entities);
+        List<Participant> savedEntities = participantRepository.saveAll(entities);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Participants saved successfully.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedEntities);
     }
 
     @GetMapping
