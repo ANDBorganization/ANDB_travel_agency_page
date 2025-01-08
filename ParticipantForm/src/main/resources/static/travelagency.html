@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traveler - Search Trips</title>
+    <link rel="stylesheet" href="style_2.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchForm = document.querySelector('.search-form');
+            const resultsSection = document.querySelector('.search-results');
+
+            // Initially hide results section
+            resultsSection.style.display = 'none';
+
+            searchForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent form submission
+
+                // Display results section when search is clicked
+                resultsSection.style.display = 'block';
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">Traveler</div>
+    </header>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <h1>Find Your Perfect Trip</h1>
+        <form class="search-form">
+            <input type="text" placeholder="Enter destination or keyword (optional)" name="destination">
+            <div class="date-range">
+                <label for="start-date">Start Date:</label>
+                <input type="date" id="start-date" name="start-date">
+
+                <label for="end-date">End Date:</label>
+                <input type="date" id="end-date" name="end-date">
+            </div>
+            <div class="price-range">
+                <label for="min-price">Min Price ($):</label>
+                <input type="number" id="min-price" name="min-price" placeholder="Min">
+
+                <label for="max-price">Max Price ($):</label>
+                <input type="number" id="max-price" name="max-price" placeholder="Max">
+            </div>
+            <div class="rating-range">
+                <label for="min-rating">Min Rating:</label>
+                <input type="number" id="min-rating" name="min-rating" min="1" max="5" placeholder="1">
+
+                <label for="max-rating">Max Rating:</label>
+                <input type="number" id="max-rating" name="max-rating" min="1" max="5" placeholder="5">
+            </div>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- Search Results Section -->
+    <div class="section search-results">
+        <h2>Search Results</h2>
+        <div class="results">
+            <div class="card">
+                <img src="https://via.placeholder.com/300x200" alt="Trip">
+                <h3>Romantic Paris Getaway</h3>
+                <p>Starting at $3000 | The City of Light</p>
+                <p>2024-03-01 to 2024-03-07</p>
+                <a href="trip_details_paris.html" class="cta">View Details</a>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/300x200" alt="Trip">
+                <h3>Maldives Honeymoon Special</h3>
+                <p>Starting at $5000 | Tropical Paradise</p>
+                <p>2024-06-15 to 2024-06-22</p>
+                <a href="trip_details_maldives.html" class="cta">View Details</a>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/300x200" alt="Trip">
+                <h3>Tokyo Adventure</h3>
+                <p>Starting at $4000 | A Blend of Modern and Traditional</p>
+                <p>2024-09-10 to 2024-09-20</p>
+                <a href="trip_details_tokyo.html" class="cta">View Details</a>
+            </div>
+        </div>
+        <p class="no-results">No trips found. Try adjusting your filters.</p>
+    </div>
+
+    <footer>
+        <p>ANDB project</p>
+    </footer>
+</body>
+</html>
