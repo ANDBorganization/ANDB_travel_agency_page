@@ -1,4 +1,4 @@
-# ANDB_newrep
+# ANDB
 Project focused on agile development and scrum. 
 
 ### Screenshots
